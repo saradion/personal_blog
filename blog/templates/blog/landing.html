@@ -1,0 +1,102 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}SIGNAL/LOG — Personal Blog{% endblock %}
+
+{% block content %}
+<section class="hero" id="top">
+    <div class="hero-inner">
+        <p class="eyebrow">// personal archive</p>
+        <h1 class="hero-title">Notes, <span class="accent-teal">tracks</span>, frames &amp; <span class="accent-teal">files</span>.</h1>
+        <p class="hero-sub">A small broadcasting surface for things I make, find, and don't want to lose.</p>
+    </div>
+</section>
+
+{% if newest %}
+<section class="newest" id="newest">
+    <div class="newest-tag">
+        <span class="pulse-dot"></span> NEWEST TRANSMISSION
+    </div>
+    <article class="newest-card">
+        <a href="{% url 'blog:article_detail' pk=newest.pk %}" class="newest-link">
+            <div class="newest-cover">
+                {% if newest.cover_image %}
+                    <img src="{{ newest.cover_image.url }}" alt="{{ newest.title }}">
+                {% else %}
+                    <div class="newest-cover-fallback">
+                        <span>// no cover</span>
+                    </div>
+                {% endif %}
+                <div class="newest-glow"></div>
+            </div>
+            <div class="newest-body">
+                <h2 class="newest-title">{{ newest.title }}</h2>
+                <p class="newest-summary">{{ newest.summary|default:"No summary provided." }}</p>
+                <div class="newest-meta">
+                    <span class="meta-author">@{{ newest.author }}</span>
+                    <span class="meta-dot">·</span>
+                    <span class="meta-date">{{ newest.created_at|date:"M d, Y · H:i" }}</span>
+                </div>
+                <div class="newest-stats">
+                    <span class="stat-pill">{{ newest.paragraphs.count }} ¶</span>
+                    <span class="stat-pill">{{ newest.media.count }} files</span>
+                </div>
+                <span class="read-more">Read transmission →</span>
+            </div>
+        </a>
+    </article>
+</section>
+{% endif %}
+
+<section class="articles" id="articles">
+    <header class="section-head">
+        <h2 class="section-title">Archive</h2>
+        <p class="section-sub">Older transmissions, in reverse chronological order.</p>
+    </header>
+
+    {% if articles %}
+    <div class="article-grid">
+        {% for article in articles %}
+        <article class="article-card">
+            <a href="{% url 'blog:article_detail' pk=article.pk %}" class="article-card-link">
+                <div class="article-card-cover">
+                    {% if article.cover_image %}
+                        <img src="{{ article.cover_image.url }}" alt="{{ article.title }}">
+                    {% else %}
+                        <div class="article-card-fallback">
+                            <span>// cover pending</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="article-card-body">
+                    <h3 class="article-card-title">{{ article.title }}</h3>
+                    <p class="article-card-summary">{{ article.summary|truncatewords:18 }}</p>
+                    <div class="article-card-meta">
+                        <span>@{{ article.author }}</span>
+                        <span class="meta-dot">·</span>
+                        <span>{{ article.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    {% if article.media.exists %}
+                    <div class="article-card-tags">
+                        {% for media in article.media.all %}
+                            <span class="tag tag-{{ media.media_type }}">{{ media.get_media_type_display }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No older articles yet.</p>
+    {% endif %}
+</section>
+
+<section class="about" id="about">
+    <div class="about-inner">
+        <h2 class="section-title">About</h2>
+        <p>This is a personal blog. The admin can post text, pictures, videos, MP3 tracks and arbitrary files. Each paragraph of an article can carry its own image. The most recent post is highlighted with a neon accent on this landing page.</p>
+    </div>
+</section>
+{% endblock %}

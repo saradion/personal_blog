@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Personal Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-inner">
+        <a href="{% url 'blog:landing' %}" class="brand">
+            <span class="brand-dot"></span>
+            <span class="brand-text">SIGNAL<span class="brand-accent">/LOG</span></span>
+        </a>
+        <nav class="menu" aria-label="Main menu">
+            <a href="{% url 'blog:landing' %}" class="menu-link">Home</a>
+            <a href="{% url 'blog:landing' %}#articles" class="menu-link">Articles</a>
+            <a href="{% url 'blog:landing' %}#about" class="menu-link">About</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'blog:create_article' %}" class="menu-link menu-link-cta">+ New Post</a>
+                <a href="/admin/" class="menu-link">Admin</a>
+            {% else %}
+                <a href="/admin/login/?next=/post/new/" class="menu-link menu-link-cta">Login</a>
+            {% endif %}
+        </nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<div class="taskbar">
+    <div class="taskbar-inner">
+        <span class="taskbar-item">FILES</span>
+        <span class="taskbar-divider">/</span>
+        <span class="taskbar-item">VIDEO</span>
+        <span class="taskbar-divider">/</span>
+        <span class="taskbar-item">AUDIO</span>
+        <span class="taskbar-divider">/</span>
+        <span class="taskbar-item">TEXT</span>
+        <span class="taskbar-spacer"></span>
+        <span class="taskbar-pulse"></span>
+        <span class="taskbar-status">LIVE</span>
+    </div>
+</div>
+
+<main class="page">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <span>© {% now "Y" %} SIGNAL/LOG — personal archive</span>
+        <span class="footer-meta">Built with Django</span>
+    </div>
+</footer>
+
+<script src="{% static 'blog/js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

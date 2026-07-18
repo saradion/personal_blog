@@ -1,0 +1,107 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}New Post — SIGNAL/LOG{% endblock %}
+
+{% block content %}
+<section class="create">
+    <header class="create-head">
+        <h1 class="section-title">New transmission</h1>
+        <p class="section-sub">Compose an article with paragraphs, images and media attachments.</p>
+    </header>
+
+    <form method="post" enctype="multipart/form-data" class="create-form">
+        {% csrf_token %}
+
+        <fieldset class="form-block">
+            <legend>Article</legend>
+            <div class="form-row">
+                <label class="form-label">Title</label>
+                {{ form.title }}
+            </div>
+            <div class="form-row">
+                <label class="form-label">Author</label>
+                {{ form.author }}
+            </div>
+            <div class="form-row">
+                <label class="form-label">Summary</label>
+                {{ form.summary }}
+            </div>
+            <div class="form-row">
+                <label class="form-label">Cover image</label>
+                {{ form.cover_image }}
+            </div>
+            <div class="form-row form-row-inline">
+                <label class="form-label">Published</label>
+                {{ form.is_published }}
+            </div>
+        </fieldset>
+
+        <fieldset class="form-block">
+            <legend>Paragraphs</legend>
+            {{ paragraph_formset.management_form }}
+            <div class="formset" id="paragraph-formset">
+                {% for form in paragraph_formset %}
+                <div class="formset-row">
+                    {{ form.id }}
+                    <div class="form-row">
+                        <label class="form-label">Text</label>
+                        {{ form.text }}
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Image (optional)</label>
+                        {{ form.image }}
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Image caption</label>
+                        {{ form.image_caption }}
+                    </div>
+                    <div class="form-row form-row-inline">
+                        <label class="form-label">Delete</label>
+                        {{ form.DELETE }}
+                    </div>
+                    {% if form.errors %}
+                    <div class="form-errors">{{ form.errors }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <fieldset class="form-block">
+            <legend>Media attachments (video / mp3 / any file)</legend>
+            {{ media_formset.management_form }}
+            <div class="formset" id="media-formset">
+                {% for form in media_formset %}
+                <div class="formset-row">
+                    {{ form.id }}
+                    <div class="form-row">
+                        <label class="form-label">File</label>
+                        {{ form.file }}
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Type</label>
+                        {{ form.media_type }}
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Caption</label>
+                        {{ form.caption }}
+                    </div>
+                    <div class="form-row form-row-inline">
+                        <label class="form-label">Delete</label>
+                        {{ form.DELETE }}
+                    </div>
+                    {% if form.errors %}
+                    <div class="form-errors">{{ form.errors }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Publish</button>
+            <a href="{% url 'blog:landing' %}" class="btn-ghost">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
